@@ -91,7 +91,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             statement.setString(1, id);
 
             int result = statement.executeUpdate();
-            log.debug("result: {}", result);
+            log.debug("deleteById: {}", result);
             return result;
         } catch (SQLException e) {
             throw new RuntimeException(e);
