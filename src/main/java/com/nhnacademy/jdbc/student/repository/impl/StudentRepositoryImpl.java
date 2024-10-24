@@ -152,7 +152,7 @@ public class StudentRepositoryImpl implements StudentRepository {
         int limit = pageSize;
 
         ResultSet rs = null;
-        String sql="select id, name, gender, age, created_at from jdbc_students order by id desc limit  ?,? ";
+        String sql="select * from jdbc_students order by id desc limit  ?,? ";
         try(PreparedStatement psmt = connection.prepareStatement(sql)) {
             psmt.setInt(1,offset);
             psmt.setInt(2,limit);
