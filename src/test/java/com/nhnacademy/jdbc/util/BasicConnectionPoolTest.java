@@ -1,5 +1,6 @@
 package com.nhnacademy.jdbc.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 class BasicConnectionPoolTest {
 
@@ -21,7 +23,7 @@ class BasicConnectionPoolTest {
     @BeforeAll
     static void setUp() {
         //todo#0 - jdbcUrl, username, password를 설정하세요
-        basicConnectionPool = new BasicConnectionPool(com.mysql.cj.jdbc.Driver.class.getName(),"","","",5);
+        basicConnectionPool = new BasicConnectionPool(com.mysql.cj.jdbc.Driver.class.getName(),"jdbc:mysql://133.186.241.167:3306/nhn_academy_27","nhn_academy_27","waj4G-n9E6V@-E-H",5);
     }
 
     @AfterAll
@@ -60,7 +62,7 @@ class BasicConnectionPoolTest {
     void getConnection_empty() throws InterruptedException, SQLException {
         connection4 = basicConnectionPool.getConnection();
         connection5 = basicConnectionPool.getConnection();
-        Connection connection6 = basicConnectionPool.getConnection();
+//        Connection connection6 = basicConnectionPool.getConnection();
 
         Assertions.assertAll(
                 ()->Assertions.assertEquals(basicConnectionPool.getUsedConnectionSize(),5)
