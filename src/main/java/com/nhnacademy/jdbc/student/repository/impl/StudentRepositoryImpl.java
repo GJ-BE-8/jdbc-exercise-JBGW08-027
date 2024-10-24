@@ -12,12 +12,50 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public int save(Connection connection, Student student){
         //todo#2 학생등록
-        return 0;
+        String sql = "insert into jdbc_students(id, name, gender, age) values(?,?,?,?)";
+        try(
+                PreparedStatement statement = connection.prepareStatement(sql);
+                ) {
+            statement.setString(1, student.getId());
+            statement.setString(2, student.getName());
+            statement.setString(3, student.getGender().toString());
+            statement.setInt(4, student.getAge());
+
+            int result = statement.executeUpdate();
+            log.debug("save result: {}", result);
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Optional<Student> findById(Connection connection,String id){
         //todo#3 학생조회
+        String sql = "select * from jdbc_students where id = ?";
+
+        try(
+                PreparedStatement statement = connection.prepareStatement(sql);
+                ) {
+            statement.setString(1, id);
+
+            ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
+
+            if(rs.next()){
+                Student student = new Student(
+                        rs.getString("id"),
+                        rs.getString("name"),
+                        Student.GENDER.valueOf(rs.getString("gender")),
+                        rs.getInt("age"),
+                        rs.getTimestamp("created_at").toLocalDateTime()
+                );
+                log.debug("findById: {}", student);
+                return Optional.of(student);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         return Optional.empty();
     }
@@ -25,15 +63,39 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public int update(Connection connection,Student student){
         //todo#4 학생수정
+        String sql = "update jdbc_students set name = ?, gender = ?, age = ? where id = ?";
+        try(
+                PreparedStatement statement = connection.prepareStatement(sql);
+                ) {
+            statement.setString(1, student.getName());
+            statement.setString(2, student.getGender().toString());
+            statement.setInt(3, student.getAge());
+            statement.setString(4, student.getId());
 
-        return 0;
+            int result = statement.executeUpdate();
+            log.debug("update result: {}", result);
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public int deleteById(Connection connection,String id){
         //todo#5 학생삭제
+        String sql = "delete from jdbc_students where id = ?";
 
-        return 0;
+        try(
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setString(1, id);
+
+            int result = statement.executeUpdate();
+            log.debug("result: {}", result);
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
